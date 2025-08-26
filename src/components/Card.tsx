@@ -18,6 +18,7 @@ interface CardProps {
   onClick?: () => void;
   variant?: "product" | "collection" | "featured";
   className?: string;
+  backgroundColor?: string;
 }
 
 export default function Card({
@@ -37,6 +38,7 @@ export default function Card({
   onClick,
   variant = "product",
   className = "",
+  backgroundColor,
 }: CardProps) {
   const handleClick = () => {
     if (onClick) {
@@ -44,142 +46,68 @@ export default function Card({
     }
   };
 
+  // Define background colors for variety
+  const getBackgroundColor = (index?: number) => {
+    if (backgroundColor) return backgroundColor;
+
+    // Use a consistent default background color to avoid hydration mismatch
+    return "bg-gray-200";
+  };
+
   const CardContent = () => (
     <div
-      className={`group cursor-pointer transition-all duration-300 hover:shadow-lg ${className}`}
+      className={`group cursor-pointer transition-all duration-300 bg-white rounded-lg overflow-hidden border border-gray-100 hover:shadow-md ${className}`}
       onClick={handleClick}
     >
       {/* Image Container */}
-      <div className="relative bg-light-200 rounded-lg overflow-hidden mb-4 aspect-square">
+      <div
+        className={`relative overflow-hidden aspect-square ${getBackgroundColor()}`}
+      >
         {/* Badge */}
         {badge && (
-          <div className="absolute top-3 left-3 z-10">
-            <span
-              className={`
-              px-2 py-1 rounded-full text-footnote font-footnote
-              ${
-                badge === "Best Seller"
-                  ? "bg-orange text-light-100"
-                  : badge === "Just In"
-                  ? "bg-green text-light-100"
-                  : badge === "Sale"
-                  ? "bg-red text-light-100"
-                  : "bg-dark-900 text-light-100"
-              }
-            `}
-            >
+          <div className="absolute top-4 left-4 z-10">
+            <span className="bg-orange-500 text-white px-3 py-1 text-sm font-medium rounded-full">
               {badge}
             </span>
           </div>
         )}
 
         {/* Product Image */}
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full flex items-center justify-center">
           <Image
             src={imageUrl}
             alt={imageAlt}
             fill
-            className="object-contain group-hover:scale-105 transition-transform duration-300"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-        </div>
-
-        {/* Quick Actions Overlay - Appears on hover */}
-        <div className="absolute inset-0 bg-dark-900 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <button className="bg-light-100 text-dark-900 px-4 py-2 rounded-full text-caption font-caption hover:bg-dark-900 hover:text-light-100 transition-colors duration-200 transform translate-y-4 group-hover:translate-y-0">
-            Quick View
-          </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="space-y-2">
-        {/* Category */}
-        {category && (
-          <p className="text-caption text-dark-500 font-caption uppercase tracking-wide">
-            {category}
+      <div className="p-4">
+        {/* Title and Price Row */}
+        <div className="flex items-start justify-between mb-1">
+          <h3 className="text-base font-medium text-black leading-tight flex-1 pr-2">
+            {title}
+          </h3>
+          {price && (
+            <span className="text-base font-medium text-black whitespace-nowrap">
+              ${price}
+            </span>
+          )}
+        </div>
+
+        {/* Subtitle */}
+        {subtitle && <p className="text-gray-500 text-sm mb-1">{subtitle}</p>}
+
+        {/* Colors count */}
+        {colors && colors.length > 0 && (
+          <p className="text-gray-500 text-sm">
+            {colors.length} Colour{colors.length !== 1 ? "s" : ""}
           </p>
         )}
 
-        {/* Title */}
-        <h3 className="text-body-medium font-body-medium text-dark-900 line-clamp-2 group-hover:text-dark-700 transition-colors duration-200">
-          {title}
-        </h3>
-
-        {/* Subtitle */}
-        {subtitle && (
-          <p className="text-caption text-dark-700 font-caption">{subtitle}</p>
-        )}
-
-        {/* Description - Only show for featured variant */}
-        {description && variant === "featured" && (
-          <p className="text-body text-dark-700 line-clamp-3">{description}</p>
-        )}
-
-        {/* Colors */}
-        {colors.length > 0 && (
-          <div className="flex items-center space-x-1">
-            <span className="text-caption text-dark-500 mr-2">Colors:</span>
-            <div className="flex space-x-1">
-              {colors.slice(0, 6).map((color, index) => (
-                <div
-                  key={index}
-                  className="w-4 h-4 rounded-full border-2 border-light-300"
-                  style={{ backgroundColor: color.toLowerCase() }}
-                  title={color}
-                />
-              ))}
-              {colors.length > 6 && (
-                <span className="text-caption text-dark-500">
-                  +{colors.length - 6}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Sizes */}
-        {sizes.length > 0 && (
-          <div className="flex items-center space-x-1">
-            <span className="text-caption text-dark-500 mr-2">Sizes:</span>
-            <div className="flex flex-wrap gap-1">
-              {sizes.slice(0, 4).map((size, index) => (
-                <span
-                  key={index}
-                  className="text-footnote text-dark-700 bg-light-200 px-1 py-0.5 rounded"
-                >
-                  {size}
-                </span>
-              ))}
-              {sizes.length > 4 && (
-                <span className="text-footnote text-dark-500">
-                  +{sizes.length - 4}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Price */}
-        {price && (
-          <div className="flex items-center space-x-2 pt-2">
-            <span className="text-body-medium font-body-medium text-dark-900">
-              ${price}
-            </span>
-            {originalPrice && originalPrice !== price && (
-              <span className="text-body text-dark-500 line-through">
-                ${originalPrice}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Add to Cart Button - Only for product variant */}
-        {variant === "product" && (
-          <button className="w-full mt-4 bg-dark-900 text-light-100 py-2 px-4 rounded-full text-caption font-caption hover:bg-dark-700 transition-colors duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
-            Add to Cart
-          </button>
-        )}
       </div>
     </div>
   );
@@ -207,4 +135,58 @@ export function CollectionCard(props: Omit<CardProps, "variant">) {
 
 export function FeaturedCard(props: Omit<CardProps, "variant">) {
   return <Card {...props} variant="featured" />;
+}
+
+// Example usage component showing the grid layout
+export function ProductGrid() {
+  const products = [
+    {
+      id: "1",
+      title: "Air Max Pulse",
+      subtitle: "Men's Shoes",
+      price: "149.99",
+      colors: ["Blue", "White", "Navy", "Orange", "Gray", "Black"],
+      imageUrl: "/air-max-pulse.jpg",
+      imageAlt: "Air Max Pulse",
+      backgroundColor: "bg-gray-200",
+    },
+    {
+      id: "2",
+      title: "Air Zoom Pegasus",
+      subtitle: "Men's Shoes",
+      price: "129.99",
+      colors: ["Orange", "Red", "Black", "White"],
+      imageUrl: "/air-zoom-pegasus.jpg",
+      imageAlt: "Air Zoom Pegasus",
+      backgroundColor: "bg-slate-700",
+    },
+    {
+      id: "3",
+      title: "InfinityRN 4",
+      subtitle: "Men's Shoes",
+      price: "159.99",
+      colors: ["White", "Gray", "Brown", "Black", "Navy", "Green"],
+      imageUrl: "/infinity-rn-4.jpg",
+      imageAlt: "InfinityRN 4",
+      backgroundColor: "bg-gray-100",
+    },
+    {
+      id: "4",
+      title: "Metcon 9",
+      subtitle: "Men's Shoes",
+      price: "139.99",
+      colors: ["Black", "Red", "Gray"],
+      imageUrl: "/metcon-9.jpg",
+      imageAlt: "Metcon 9",
+      backgroundColor: "bg-gray-50",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {products.map((product) => (
+        <Card key={product.id} {...product} />
+      ))}
+    </div>
+  );
 }

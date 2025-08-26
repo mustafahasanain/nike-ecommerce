@@ -35,20 +35,24 @@ export default function Footer() {
     <footer className="bg-dark-900 text-light-100">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-12">
-          <div className="flex items-start md:col-span-3">
-            <Image src="/logo.svg" alt="Nike" width={48} height={48} />
+          {/* Nike Logo - Takes less space */}
+          <div className="flex items-start md:col-span-2">
+            <Image src="/logo.svg" alt="Nike" width={85} height={85} />
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 md:col-span-7">
+          {/* Navigation Columns - Takes more space */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 md:col-span-8">
             {columns.map((col) => (
               <div key={col.title}>
-                <h4 className="mb-4 text-heading-3">{col.title}</h4>
+                <h4 className="mb-4 text-base font-medium text-light-100">
+                  {col.title}
+                </h4>
                 <ul className="space-y-3">
                   {col.links.map((l) => (
                     <li key={l}>
                       <Link
                         href="#"
-                        className="text-body text-light-400 hover:text-light-300"
+                        className="text-sm text-light-400 hover:text-light-100 transition-colors"
                       >
                         {l}
                       </Link>
@@ -59,6 +63,7 @@ export default function Footer() {
             ))}
           </div>
 
+          {/* Social Icons - Aligned to the right */}
           <div className="flex gap-4 md:col-span-2 md:justify-end">
             {[
               { src: "/x.svg", alt: "X" },
@@ -69,7 +74,7 @@ export default function Footer() {
                 key={s.alt}
                 href="#"
                 aria-label={s.alt}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-light-100"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-light-100 hover:bg-light-200 transition-colors"
               >
                 <Image src={s.src} alt={s.alt} width={18} height={18} />
               </Link>
@@ -78,14 +83,14 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* <div className="> */}
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 text-light-400 sm:flex-row sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 text-caption">
+      {/* Bottom Section */}
+      <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 px-4 py-6 text-light-400 sm:flex-row sm:items-center sm:px-6 lg:px-8 border-t border-gray-800 ">
+        <div className="flex items-center gap-2 text-sm">
           <Image src="/globe.svg" alt="" width={16} height={16} />
           <span>Iraq</span>
-          <span>© 2025 Nike, Inc. All Rights Reserved</span>
+          <span className="ml-4">© 2025 Nike, Inc. All Rights Reserved</span>
         </div>
-        <ul className="flex items-center gap-6 text-caption">
+        <ul className="flex items-center gap-6 text-sm">
           {[
             "Guides",
             "Terms of Sale",
@@ -93,12 +98,13 @@ export default function Footer() {
             "Nike Privacy Policy",
           ].map((t) => (
             <li key={t}>
-              <Link href="#">{t}</Link>
+              <Link href="#" className="hover:text-light-100 transition-colors">
+                {t}
+              </Link>
             </li>
           ))}
         </ul>
       </div>
-      {/* </div> */}
     </footer>
   );
 }

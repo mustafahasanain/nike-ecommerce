@@ -12,14 +12,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-light-100 border-b border-light-300 sticky top-0 z-50">
-      {/* Top banner - optional promotional strip */}
-      <div className="bg-dark-900 text-light-100 text-center py-2">
-        <p className="text-footnote font-footnote">
-          Free shipping on orders over $50
-        </p>
-      </div>
-
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Nike Logo */}
@@ -28,118 +21,65 @@ export default function Navbar() {
               <Image
                 src="/logo.svg"
                 alt="Nike"
-                width={28}
-                height={28}
+                width={55}
+                height={55}
                 priority
                 className="invert"
               />
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <Link
-                href="/men"
-                className="text-dark-900 hover:text-dark-700 px-3 py-2 text-body font-body-medium transition-colors duration-200"
-              >
-                Men
-              </Link>
-              <Link
-                href="/women"
-                className="text-dark-900 hover:text-dark-700 px-3 py-2 text-body font-body-medium transition-colors duration-200"
-              >
-                Women
-              </Link>
-              <Link
-                href="/kids"
-                className="text-dark-900 hover:text-dark-700 px-3 py-2 text-body font-body-medium transition-colors duration-200"
-              >
-                Kids
-              </Link>
-              <Link
-                href="/collections"
-                className="text-dark-900 hover:text-dark-700 px-3 py-2 text-body font-body-medium transition-colors duration-200"
-              >
-                Collections
-              </Link>
-              <Link
-                href="/contact"
-                className="text-dark-900 hover:text-dark-700 px-3 py-2 text-body font-body-medium transition-colors duration-200"
-              >
-                Contact
-              </Link>
-            </div>
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link
+              href="/men"
+              className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
+            >
+              Men
+            </Link>
+            <Link
+              href="/women"
+              className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
+            >
+              Women
+            </Link>
+            <Link
+              href="/kids"
+              className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
+            >
+              Kids
+            </Link>
+            <Link
+              href="/collections"
+              className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
+            >
+              Collections
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
+            >
+              Contact
+            </Link>
           </div>
 
-          {/* Right side - Search, Cart, User */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Search Icon */}
+          {/* Right side - Search and Cart as text */}
+          <div className="hidden md:flex items-center space-x-6">
             <button
               type="button"
-              className="text-dark-900 hover:text-dark-700 p-2 transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 text-base font-semibold  transition-colors duration-200"
               aria-label="Search"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              Search
             </button>
 
-            {/* Cart Icon with counter */}
             <Link
               href="/cart"
-              className="text-dark-900 hover:text-dark-700 p-2 relative transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 text-base font-semibold  transition-colors duration-200"
               aria-label="Shopping cart"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m-.4-1h18M9 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM20.5 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-                />
-              </svg>
-              {/* Cart counter badge */}
-              <span className="absolute -top-1 -right-1 bg-red text-light-100 rounded-full w-5 h-5 flex items-center justify-center text-footnote font-footnote">
-                2
-              </span>
+              My Cart (2)
             </Link>
-
-            {/* User Account */}
-            <button
-              type="button"
-              className="text-dark-900 hover:text-dark-700 p-2 transition-colors duration-200"
-              aria-label="User account"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </button>
           </div>
 
           {/* Mobile menu button */}
@@ -147,31 +87,16 @@ export default function Navbar() {
             {/* Mobile Cart */}
             <Link
               href="/cart"
-              className="text-dark-900 hover:text-dark-700 p-2 relative"
+              className="text-gray-900 hover:text-gray-700 text-sm font-medium"
               aria-label="Shopping cart"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m-.4-1h18M9 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM20.5 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-                />
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-red text-light-100 rounded-full w-5 h-5 flex items-center justify-center text-footnote font-footnote">
-                2
-              </span>
+              Cart (2)
             </Link>
 
             {/* Hamburger button */}
             <button
               type="button"
-              className="text-dark-900 hover:text-dark-700 inline-flex items-center justify-center p-2 transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 inline-flex items-center justify-center p-2 transition-colors duration-200"
               aria-controls="mobile-menu"
               aria-expanded="false"
               onClick={toggleMenu}
@@ -216,83 +141,51 @@ export default function Navbar() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-light-100 border-t border-light-300">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
             <Link
               href="/men"
-              className="text-dark-900 hover:text-dark-700 block px-3 py-2 text-body font-body-medium transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Men
             </Link>
             <Link
               href="/women"
-              className="text-dark-900 hover:text-dark-700 block px-3 py-2 text-body font-body-medium transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Women
             </Link>
             <Link
               href="/kids"
-              className="text-dark-900 hover:text-dark-700 block px-3 py-2 text-body font-body-medium transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Kids
             </Link>
             <Link
               href="/collections"
-              className="text-dark-900 hover:text-dark-700 block px-3 py-2 text-body font-body-medium transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Collections
             </Link>
             <Link
               href="/contact"
-              className="text-dark-900 hover:text-dark-700 block px-3 py-2 text-body font-body-medium transition-colors duration-200"
+              className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
             </Link>
 
-            {/* Mobile Search and User */}
-            <div className="border-t border-light-300 pt-4 flex items-center justify-around">
+            {/* Mobile Search */}
+            <div className="border-t border-gray-200 pt-4">
               <button
                 type="button"
-                className="text-dark-900 hover:text-dark-700 p-2"
+                className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium w-full text-left"
                 aria-label="Search"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                className="text-dark-900 hover:text-dark-700 p-2"
-                aria-label="User account"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+                Search
               </button>
             </div>
           </div>
