@@ -20,11 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${jost.className} antialiased`}>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
+      <body className={`${jost.className} antialiased`}>{children}</body>
     </html>
   );
 }
