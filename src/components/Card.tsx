@@ -107,7 +107,6 @@ export default function Card({
             {colors.length} Colour{colors.length !== 1 ? "s" : ""}
           </p>
         )}
-
       </div>
     </div>
   );

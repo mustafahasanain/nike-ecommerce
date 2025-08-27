@@ -3,20 +3,24 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AuthFormProps {
   mode: "signin" | "signup";
+  onSubmit: (
+    formData: FormData
+  ) => Promise<{ ok: boolean; userId?: string } | void>;
 }
 
-interface FormData {
-  fullName?: string;
+interface AuthFormData {
+  name?: string;
   email: string;
   password: string;
 }
 
-export default function AuthForm({ mode }: AuthFormProps) {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
+export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
+  const [formData, setFormData] = useState<AuthFormData>({
+    name: "",
     email: "",
     password: "",
   });
@@ -24,6 +28,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const isSignUp = mode === "signup";
+
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,15 +39,18 @@ export default function AuthForm({ mode }: AuthFormProps) {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const formData = new FormData(e.currentTarget);
 
-    console.log("Form submitted:", formData);
-    setIsLoading(false);
+    try {
+      const result = await onSubmit(formData);
+
+      if (result?.ok) router.push("/");
+    } catch (e) {
+      console.log("error", e);
+    }
   };
 
   return (
@@ -69,11 +78,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
               Full Name
             </label>
             <input
-              id="fullName"
-              name="fullName"
+              id="name"
+              name="name"
               type="text"
               required
-              value={formData.fullName || ""}
+              value={formData.name || ""}
               onChange={handleInputChange}
               placeholder="John Doe"
               className="w-full px-4 py-4 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"

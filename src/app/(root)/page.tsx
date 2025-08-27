@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/index";
+import { getCurrentUser } from "@/lib/auth/actions";
 
 const Home = () => {
   const latestShoes = [
