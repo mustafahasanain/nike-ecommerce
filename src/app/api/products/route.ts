@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    const allProducts = await db.select().from(products).where(eq(products.isActive, true));
+    const allProducts = await db.select().from(products).where(eq(products.isPublished, true));
     return NextResponse.json(allProducts);
   } catch (error) {
     console.error('Error fetching products:', error);

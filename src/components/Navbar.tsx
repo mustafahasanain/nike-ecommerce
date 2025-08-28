@@ -32,22 +32,22 @@ export default function Navbar() {
           {/* Desktop Navigation - Centered */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
-              href="/men"
+              href="/products?gender=men"
               className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
             >
               Men
             </Link>
             <Link
-              href="/women"
+              href="/products?gender=women"
               className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
             >
               Women
             </Link>
             <Link
-              href="/kids"
+              href="/products?gender=unisex"
               className="text-gray-900 hover:text-gray-700 px-3 py-2 text-base font-semibold  transition-colors duration-200"
             >
-              Kids
+              Unisex
             </Link>
             <Link
               href="/collections"
@@ -143,25 +143,25 @@ export default function Navbar() {
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
             <Link
-              href="/men"
+              href="/products?gender=men"
               className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Men
             </Link>
             <Link
-              href="/women"
+              href="/products?gender=women"
               className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
               Women
             </Link>
             <Link
-              href="/kids"
+              href="/products?gender=unisex"
               className="text-gray-900 hover:text-gray-700 block px-3 py-2 text-base font-medium transition-colors duration-200"
               onClick={() => setIsMenuOpen(false)}
             >
-              Kids
+              Unisex
             </Link>
             <Link
               href="/collections"

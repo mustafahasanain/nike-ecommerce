@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { Product } from '@/lib/db/schema';
-import { ProductCard } from './product-card';
+// import { ProductCard } from './product-card'; // Disabled - using Card.tsx instead
+import Card from './Card';
 import { useProductStore } from '@/lib/stores/product-store';
 
 export function ProductGrid() {
@@ -66,7 +67,15 @@ export function ProductGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <Card 
+          key={product.id} 
+          id={product.id}
+          title={product.name}
+          description={product.description || ''}
+          imageUrl="/shoes/shoe-1.jpg" // placeholder since Product schema doesn't have imageUrl
+          imageAlt={product.name}
+          href={`/products/${product.id}`}
+        />
       ))}
     </div>
   );

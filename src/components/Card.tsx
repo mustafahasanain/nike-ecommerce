@@ -57,7 +57,7 @@ export default function Card({
   const CardContent = () => (
     <div
       className={`group cursor-pointer transition-all duration-300 bg-white rounded-lg overflow-hidden border border-gray-100 hover:shadow-md ${className}`}
-      onClick={handleClick}
+      {...(onClick && !href ? { onClick: handleClick } : {})}
     >
       {/* Image Container */}
       <div
@@ -101,11 +101,33 @@ export default function Card({
         {/* Subtitle */}
         {subtitle && <p className="text-gray-500 text-sm mb-1">{subtitle}</p>}
 
-        {/* Colors count */}
+        {/* Colors */}
         {colors && colors.length > 0 && (
-          <p className="text-gray-500 text-sm">
-            {colors.length} Colour{colors.length !== 1 ? "s" : ""}
-          </p>
+          <div className="flex items-center gap-1 mb-1">
+            {colors.slice(0, 4).map((color, index) => (
+              <div
+                key={index}
+                className="w-3 h-3 rounded-full border border-gray-300"
+                style={{ 
+                  backgroundColor: color.toLowerCase() === 'white' ? '#ffffff' : 
+                                  color.toLowerCase() === 'black' ? '#000000' :
+                                  color.toLowerCase() === 'red' ? '#DC2626' :
+                                  color.toLowerCase() === 'blue' ? '#2563EB' :
+                                  color.toLowerCase() === 'green' ? '#16A34A' :
+                                  color.toLowerCase() === 'gray' || color.toLowerCase() === 'grey' ? '#6B7280' :
+                                  color.toLowerCase() === 'orange' ? '#EA580C' :
+                                  color.toLowerCase() === 'yellow' ? '#FBBF24' :
+                                  color.toLowerCase() === 'navy' ? '#1E3A8A' :
+                                  color.toLowerCase() === 'brown' ? '#A16207' :
+                                  '#6B7280'
+                }}
+                title={color}
+              />
+            ))}
+            {colors.length > 4 && (
+              <span className="text-xs text-gray-500 ml-1">+{colors.length - 4}</span>
+            )}
+          </div>
         )}
       </div>
     </div>

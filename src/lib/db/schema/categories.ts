@@ -7,7 +7,7 @@ export const categories = pgTable('categories', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 100 }).notNull(),
   slug: varchar('slug', { length: 100 }).notNull().unique(),
-  parentId: uuid('parent_id').references(() => categories.id, { onDelete: 'cascade' }),
+  parentId: uuid('parent_id'),
 });
 
 export const categoriesRelations = relations(categories, ({ one, many }) => ({

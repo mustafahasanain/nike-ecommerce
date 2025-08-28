@@ -45,7 +45,7 @@ export const useCartStore = create<CartState>()(
         // Update totals
         const newState = get();
         const totalItems = newState.items.reduce((acc, item) => acc + item.quantity, 0);
-        const totalPrice = newState.items.reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0);
+        const totalPrice = 0; // TODO: Fix when product schema includes price
         
         set({ totalItems, totalPrice });
       },
@@ -58,7 +58,7 @@ export const useCartStore = create<CartState>()(
         // Update totals
         const newState = get();
         const totalItems = newState.items.reduce((acc, item) => acc + item.quantity, 0);
-        const totalPrice = newState.items.reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0);
+        const totalPrice = 0; // TODO: Fix when product schema includes price
         
         set({ totalItems, totalPrice });
       },
@@ -78,7 +78,7 @@ export const useCartStore = create<CartState>()(
         // Update totals
         const newState = get();
         const totalItems = newState.items.reduce((acc, item) => acc + item.quantity, 0);
-        const totalPrice = newState.items.reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0);
+        const totalPrice = 0; // TODO: Fix when product schema includes price
         
         set({ totalItems, totalPrice });
       },
@@ -87,7 +87,7 @@ export const useCartStore = create<CartState>()(
       
       getCartTotal: () => {
         const { items } = get();
-        return items.reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0);
+        return 0; // TODO: Fix when product schema includes price
       },
     }),
     {
