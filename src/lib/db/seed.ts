@@ -151,35 +151,26 @@ const NIKE_PRODUCTS = [
     basePrice: 65.00,
   },
   {
-    name: "Dri-FIT ADV TechKnit Ultra",
-    description: "Made with Nike Dri-FIT ADV technology, this running shirt combines moisture-wicking fabric.",
-    category: "running",
-    gender: "men",
-    colors: ["black", "blue", "gray"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    basePrice: 80.00,
+    name: "Air Max SC",
+    description: "The Nike Air Max SC is a budget-friendly sneaker with classic Air Max styling and comfortable cushioning.",
+    category: "lifestyle",
+    gender: "unisex",
+    colors: ["white", "black", "gray"],
+    sizes: ["6", "7", "8", "9", "10", "11", "12"],
+    basePrice: 70.00,
   },
 ];
 
-async function copyImages() {
+async function getImageFiles() {
   const publicPath = path.join(process.cwd(), 'public', 'shoes');
-  const staticPath = path.join(process.cwd(), 'public', 'static', 'uploads');
   
-  if (!fs.existsSync(staticPath)) {
-    fs.mkdirSync(staticPath, { recursive: true });
+  if (!fs.existsSync(publicPath)) {
+    console.error('Shoes directory does not exist:', publicPath);
+    return [];
   }
 
   const imageFiles = fs.readdirSync(publicPath);
-  
-  for (const file of imageFiles) {
-    const sourcePath = path.join(publicPath, file);
-    const destPath = path.join(staticPath, file);
-    
-    if (!fs.existsSync(destPath)) {
-      fs.copyFileSync(sourcePath, destPath);
-      console.log(`Copied ${file} to static/uploads/`);
-    }
-  }
+  console.log(`Found ${imageFiles.length} image files in /public/shoes/`);
   
   return imageFiles;
 }
@@ -188,9 +179,22 @@ async function seedDatabase() {
   try {
     console.log('🌱 Starting database seed...');
 
-    // Copy images
-    console.log('📁 Copying images...');
-    const imageFiles = await copyImages();
+    // Get available images
+    console.log('📁 Loading available images...');
+    const imageFiles = await getImageFiles();
+
+    // Clear existing data (in reverse order to handle foreign keys)
+    console.log('🧹 Clearing existing data...');
+    try { await db.delete(productCollections); } catch (e) { console.log('No productCollections to delete'); }
+    try { await db.delete(productImages); } catch (e) { console.log('No productImages to delete'); }
+    try { await db.delete(productVariants); } catch (e) { console.log('No productVariants to delete'); }
+    try { await db.delete(products); } catch (e) { console.log('No products to delete'); }
+    try { await db.delete(collections); } catch (e) { console.log('No collections to delete'); }
+    try { await db.delete(categories); } catch (e) { console.log('No categories to delete'); }
+    try { await db.delete(brands); } catch (e) { console.log('No brands to delete'); }
+    try { await db.delete(sizes); } catch (e) { console.log('No sizes to delete'); }
+    try { await db.delete(colors); } catch (e) { console.log('No colors to delete'); }
+    try { await db.delete(genders); } catch (e) { console.log('No genders to delete'); }
 
     // Seed genders
     console.log('👫 Seeding genders...');
@@ -281,9 +285,14 @@ async function seedDatabase() {
 
     // Seed products and variants
     console.log('👟 Seeding products and variants...');
-    let imageIndex = 0;
     
-    for (const productData of NIKE_PRODUCTS) {
+    // Ensure we have enough images for products
+    if (imageFiles.length < NIKE_PRODUCTS.length) {
+      console.warn(`Warning: Only ${imageFiles.length} images available for ${NIKE_PRODUCTS.length} products`);
+    }
+    
+    for (let productIndex = 0; productIndex < NIKE_PRODUCTS.length; productIndex++) {
+      const productData = NIKE_PRODUCTS[productIndex];
       // Insert product
       const [product] = await db.insert(products).values({
         name: productData.name,
@@ -335,17 +344,15 @@ async function seedDatabase() {
         }).where(eq(products.id, product.id));
       }
 
-      // Add product images
-      const productImageCount = Math.min(3, imageFiles.length - imageIndex);
-      for (let i = 0; i < productImageCount && imageIndex < imageFiles.length; i++) {
+      // Add one unique primary image per product (set variantId to null for generic product image)
+      if (productIndex < imageFiles.length) {
         await db.insert(productImages).values({
           productId: product.id,
-          variantId: i < variants.length ? variants[i].id : null,
-          url: `/static/uploads/${imageFiles[imageIndex]}`,
-          sortOrder: i,
-          isPrimary: i === 0,
+          variantId: null, // Set to null so it shows up as a generic product image
+          url: `/shoes/${imageFiles[productIndex]}`,
+          sortOrder: 0,
+          isPrimary: true,
         });
-        imageIndex++;
       }
 
       // Randomly assign to collections

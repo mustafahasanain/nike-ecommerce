@@ -1,12 +1,6 @@
 import { Suspense } from 'react';
-import { parseSearchParams, FilterParams } from '@/lib/utils/query';
-import { 
-  mockProducts, 
-  filterProducts, 
-  sortProducts, 
-  getUniqueFilterOptions,
-  MockProduct 
-} from '@/lib/mock-data';
+import { parseFilterParams, parseSearchParams, FilterParams } from '@/lib/utils/query';
+import { getAllProducts, type ProductWithDetails } from '@/lib/actions/product';
 import Card from '@/components/Card';
 import Filters from '@/components/Filters';
 import Sort from '@/components/Sort';
@@ -16,40 +10,49 @@ interface ProductsPageProps {
 }
 
 function ActiveFilters({ filters }: { filters: FilterParams }) {
-  const filterOptions = getUniqueFilterOptions();
   const activeFilters: Array<{ type: string; label: string; value: string }> = [];
+
+  // Add search filter
+  if (filters.search) {
+    activeFilters.push({ type: 'search', label: `Search: "${filters.search}"`, value: filters.search });
+  }
+
+  // Add category filters
+  filters.category?.forEach(categorySlug => {
+    activeFilters.push({ type: 'category', label: `Category: ${categorySlug}`, value: categorySlug });
+  });
+
+  // Add brand filters
+  filters.brand?.forEach(brandSlug => {
+    activeFilters.push({ type: 'brand', label: `Brand: ${brandSlug}`, value: brandSlug });
+  });
 
   // Add gender filters
   filters.gender?.forEach(genderSlug => {
-    const gender = filterOptions.genders.find(g => g.slug === genderSlug);
-    if (gender) {
-      activeFilters.push({ type: 'gender', label: gender.label, value: genderSlug });
-    }
+    activeFilters.push({ type: 'gender', label: `Gender: ${genderSlug}`, value: genderSlug });
   });
 
   // Add color filters
   filters.color?.forEach(colorSlug => {
-    const color = filterOptions.colors.find(c => c.slug === colorSlug);
-    if (color) {
-      activeFilters.push({ type: 'color', label: color.name, value: colorSlug });
-    }
+    activeFilters.push({ type: 'color', label: `Color: ${colorSlug}`, value: colorSlug });
   });
 
   // Add size filters
   filters.size?.forEach(sizeSlug => {
-    const size = filterOptions.sizes.find(s => s.slug === sizeSlug);
-    if (size) {
-      activeFilters.push({ type: 'size', label: size.name, value: sizeSlug });
-    }
+    activeFilters.push({ type: 'size', label: `Size: ${sizeSlug}`, value: sizeSlug });
   });
 
   // Add price filters
   filters.price?.forEach(priceValue => {
-    const priceRange = filterOptions.priceRanges.find(p => p.value === priceValue);
-    if (priceRange) {
-      activeFilters.push({ type: 'price', label: priceRange.label, value: priceValue });
-    }
+    activeFilters.push({ type: 'price', label: `Price: $${priceValue}`, value: priceValue });
   });
+
+  // Add price range filters
+  if (filters.priceMin || filters.priceMax) {
+    const min = filters.priceMin || '0';
+    const max = filters.priceMax || '∞';
+    activeFilters.push({ type: 'priceRange', label: `Price: $${min} - $${max}`, value: `${min}-${max}` });
+  }
 
   if (activeFilters.length === 0) return null;
 
@@ -73,7 +76,7 @@ function ProductGrid({
   products, 
   totalCount 
 }: { 
-  products: MockProduct[]; 
+  products: ProductWithDetails[]; 
   totalCount: number; 
 }) {
   if (products.length === 0) {
@@ -94,24 +97,28 @@ function ProductGrid({
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            id={product.id}
-            title={product.name}
-            subtitle={`${product.gender.charAt(0).toUpperCase() + product.gender.slice(1)}'s ${product.category}`}
-            price={product.salePrice?.toString() || product.price.toString()}
-            originalPrice={product.salePrice ? product.price.toString() : undefined}
-            imageUrl={product.imageUrl}
-            imageAlt={product.imageAlt}
-            badge={product.badge}
-            category={`${product.gender.charAt(0).toUpperCase() + product.gender.slice(1)} • ${product.category}`}
-            colors={product.colors.map(c => c.name)}
-            sizes={product.sizes.map(s => s.name)}
-            href={`/products/${product.id}`}
-            variant="product"
-          />
-        ))}
+        {products.map((product) => {
+          const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
+          const displayPrice = product.minPrice === product.maxPrice 
+            ? product.minPrice.toString() 
+            : `${product.minPrice} - ${product.maxPrice}`;
+          
+          return (
+            <Card
+              key={product.id}
+              id={product.id}
+              title={product.name}
+              subtitle={`${product.gender.label}'s ${product.category.name}`}
+              price={displayPrice}
+              imageUrl={primaryImage?.url || '/shoes/shoe-1.jpg'}
+              imageAlt={product.name}
+              category={`${product.gender.label} • ${product.category.name}`}
+              colors={product.colors}
+              href={`/products/${product.id}`}
+              variant="product"
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -132,20 +139,12 @@ async function ProductsContent({ searchParams }: ProductsPageProps) {
     }
   });
 
-  const filters = parseSearchParams(urlSearchParams);
+  // Parse filters and call server action
+  const productFilters = parseFilterParams(urlSearchParams);
+  const { products, totalCount } = await getAllProducts(productFilters);
   
-  // Apply filters and sorting
-  const filteredProducts = filterProducts(mockProducts, {
-    gender: filters.gender,
-    color: filters.color,
-    size: filters.size,
-    price: filters.price,
-  });
-
-  const sortBy = filters.sort || 'featured';
-  const sortedProducts = sortProducts(filteredProducts, sortBy);
-
-  const totalCount = sortedProducts.length;
+  // Also get original filter params for UI display
+  const filters = parseSearchParams(urlSearchParams);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -175,7 +174,7 @@ async function ProductsContent({ searchParams }: ProductsPageProps) {
             <ActiveFilters filters={filters} />
 
             {/* Products Grid */}
-            <ProductGrid products={sortedProducts} totalCount={totalCount} />
+            <ProductGrid products={products} totalCount={totalCount} />
           </div>
         </div>
       </div>
